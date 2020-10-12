@@ -1,4 +1,6 @@
-﻿namespace SimpleChat.ServerSide.Message
+﻿using SimpleChat.ServerSide.Message.Results;
+
+namespace SimpleChat.ServerSide.Message
 {
     /// <summary>
     /// Хелпер для обработки сообщений
@@ -12,29 +14,17 @@
         {
             message = message.Trim();
 
-            var result = new ValidationResult
-            {
-                HandlerType = HandlerType.Empty,
-                Content = message
-            };
-
             if (string.IsNullOrEmpty(message))
-                return result;
+                return new EmptyResult();
 
             if (IsCommand(message))
-            {
-                result.HandlerType = HandlerType.Command;
-                result.Content = message.ToLowerInvariant();
-            }
+                return new CommandResult(message.ToLowerInvariant());
+            
             else if (IsStandardQuestion(message))
-            {
-                result.HandlerType = HandlerType.StandardQuestion;
-                result.Content = message.Replace("?", string.Empty).ToLowerInvariant();
-            }
+                return new StandardQuestionResult(message.Replace("?", string.Empty).ToLowerInvariant());
+            
             else
-                result.HandlerType = HandlerType.Message;
-
-            return result;
+                return new MessageResult(message);
         }
 
         private static bool IsCommand(string message) => AppContants.CommandsList.Contains(message.ToLowerInvariant());

@@ -3,11 +3,13 @@
     /// <summary>
     /// Результат валидации сообщения
     /// </summary>
-    public class ValidationResult
+    public abstract class ValidationResult
     {
-        public HandlerType HandlerType { get; set; }
+        protected ValidationResult(string content) => Content = content;
 
-        public string Content { get; set; }
+        public abstract HandlerType HandlerType { get; }
+
+        public string Content { get; }
     }
 
     /// <summary>
